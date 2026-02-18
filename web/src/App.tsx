@@ -1,14 +1,13 @@
-import { useState } from 'react';
-import { IconButton, Box } from '@mui/material';
+import { IconButton, Box, Typography, Fab } from '@mui/material';
 import Brightness4 from '@mui/icons-material/Brightness4';
 import Brightness7 from '@mui/icons-material/Brightness7';
+import AddIcon from '@mui/icons-material/Add';
 import { useThemeMode } from './ThemeModeContext';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
   const { mode, toggleColorMode } = useThemeMode();
 
   return (
@@ -30,18 +29,22 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Typography variant="h1">Hello Lottery App</Typography>
+      <Fab
+        variant="extended"
+        color="primary"
+        aria-label="add lottery"
+        sx={{
+          position: 'fixed',
+          textAlign: 'center',
+          right: (theme) => theme.spacing(2),
+          bottom: (theme) => theme.spacing(2),
+          zIndex: 1,
+        }}
+      >
+        <AddIcon sx={{ mr: 1 }} />
+        Add Lottery
+      </Fab>
     </>
   );
 }
