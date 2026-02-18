@@ -14,7 +14,11 @@ function App() {
   return (
     <>
       <Box sx={{ position: 'fixed', top: 8, right: 8, zIndex: 1 }}>
-        <IconButton onClick={toggleColorMode} color="inherit" aria-label="toggle theme">
+        <IconButton
+          onClick={toggleColorMode}
+          color="inherit"
+          aria-label="toggle theme"
+        >
           {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
       </Box>
@@ -39,7 +43,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
