@@ -17,8 +17,28 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
   const [lotteryPrize, setLotteryPrize] = useState('');
   const [showValidationErrors, setShowValidationErrors] = useState(false);
 
-  const nameInvalid = showValidationErrors && !lotteryName.trim();
-  const prizeInvalid = showValidationErrors && !lotteryPrize.trim();
+  const nameInvalid =
+    showValidationErrors &&
+    (!lotteryName.trim() || lotteryName.trim().length < 4);
+  const prizeInvalid =
+    showValidationErrors &&
+    (!lotteryPrize.trim() || lotteryPrize.trim().length < 4);
+
+  let nameErrorMessage = '';
+  if (nameInvalid) {
+    nameErrorMessage =
+      lotteryName.trim() === ''
+        ? 'Name is required'
+        : 'Name must be at least 4 characters';
+  }
+
+  let prizeErrorMessage = '';
+  if (prizeInvalid) {
+    prizeErrorMessage =
+      lotteryPrize.trim() === ''
+        ? 'Prize is required'
+        : 'Prize must be at least 4 characters';
+  }
 
   const handleClose = () => {
     setShowValidationErrors(false);
@@ -29,11 +49,13 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
 
   const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!lotteryName.trim() || !lotteryPrize.trim()) {
+    const nameValid = lotteryName.trim().length >= 4;
+    const prizeValid = lotteryPrize.trim().length >= 4;
+    if (!nameValid || !prizeValid) {
       setShowValidationErrors(true);
       return;
     }
-    onClose();
+    handleClose();
   };
 
   return (
@@ -48,7 +70,7 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
           value={lotteryName}
           onChange={(e) => setLotteryName(e.target.value)}
           error={nameInvalid}
-          helperText={nameInvalid ? 'Please enter a valid name' : ''}
+          helperText={nameErrorMessage}
           sx={{ mt: 2 }}
         />
         <TextField
@@ -59,7 +81,7 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
           value={lotteryPrize}
           onChange={(e) => setLotteryPrize(e.target.value)}
           error={prizeInvalid}
-          helperText={prizeInvalid ? 'Please enter a valid prize' : ''}
+          helperText={prizeErrorMessage}
           sx={{ mt: 2 }}
         />
         <Button
