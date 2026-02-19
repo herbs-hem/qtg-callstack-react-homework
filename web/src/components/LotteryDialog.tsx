@@ -5,6 +5,7 @@ import {
   TextField,
   Button,
   CircularProgress,
+  Snackbar,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -13,11 +14,15 @@ type LotteryDialogProps = {
   onClose: () => void;
 };
 
-export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
+export default function LotteryDialog({
+  open,
+  onClose,
+}: Readonly<LotteryDialogProps>) {
   const [lotteryName, setLotteryName] = useState('');
   const [lotteryPrize, setLotteryPrize] = useState('');
   const [showValidationErrors, setShowValidationErrors] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [openNotification, setOpenNotification] = useState(false);
 
   const nameInvalid =
     showValidationErrors &&
@@ -94,6 +99,7 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
       const data = await response.json();
       console.log(data);
       handleClose();
+      setOpenNotification(true);
     } catch (error) {
       if (error instanceof Error) {
         console.error('API error:', error.message, error.cause);
@@ -105,45 +111,53 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Add a new lottery</DialogTitle>
-      <DialogContent>
-        <TextField
-          variant="standard"
-          label="Lottery Name"
-          fullWidth
-          required
-          value={lotteryName}
-          onChange={(e) => setLotteryName(e.target.value)}
-          error={nameInvalid}
-          helperText={nameErrorMessage}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          variant="standard"
-          label="Lottery Prize"
-          fullWidth
-          required
-          value={lotteryPrize}
-          onChange={(e) => setLotteryPrize(e.target.value)}
-          error={prizeInvalid}
-          helperText={prizeErrorMessage}
-          sx={{ mt: 2 }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          type="button"
-          disabled={isAdding}
-          startIcon={
-            isAdding ? <CircularProgress size={20} color="inherit" /> : null
-          }
-          onClick={() => handleAdd()}
-          sx={{ mt: 2 }}
-        >
-          {isAdding ? 'Adding...' : 'Add'}
-        </Button>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add a new lottery</DialogTitle>
+        <DialogContent>
+          <TextField
+            variant="standard"
+            label="Lottery Name"
+            fullWidth
+            required
+            value={lotteryName}
+            onChange={(e) => setLotteryName(e.target.value)}
+            error={nameInvalid}
+            helperText={nameErrorMessage}
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            variant="standard"
+            label="Lottery Prize"
+            fullWidth
+            required
+            value={lotteryPrize}
+            onChange={(e) => setLotteryPrize(e.target.value)}
+            error={prizeInvalid}
+            helperText={prizeErrorMessage}
+            sx={{ mt: 2 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="button"
+            disabled={isAdding}
+            startIcon={
+              isAdding ? <CircularProgress size={20} color="inherit" /> : null
+            }
+            onClick={() => handleAdd()}
+            sx={{ mt: 2 }}
+          >
+            {isAdding ? 'Adding...' : 'Add'}
+          </Button>
+        </DialogContent>
+      </Dialog>
+      <Snackbar
+        open={openNotification}
+        onClose={() => setOpenNotification(false)}
+        message="New Lottery added successfully"
+        autoHideDuration={3000}
+      />
+    </>
   );
 }
