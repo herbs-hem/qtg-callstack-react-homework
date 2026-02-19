@@ -6,12 +6,28 @@ import { useThemeMode } from './providers/ThemeModeContext';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
-import { useState } from 'react';
-import LotteryDialog from './components/LotteryDialog';
+import { useEffect, useState } from 'react';
+import AddLotteryDialog from './components/AddLotteryDialog';
+import { useLottery } from './hooks/useLottery';
 
 function App() {
   const { mode, toggleColorMode } = useThemeMode();
   const [lotteryDialogOpen, setLotteryDialogOpen] = useState(false);
+  const { createNewLottery, isAdding, lottery, resetLottery, errorMessage } =
+    useLottery();
+
+  useEffect(() => {
+    if (lottery) {
+      setTimeout(() => {
+        setLotteryDialogOpen(false);
+      }, 1000);
+    }
+  }, [lottery]);
+
+  const CloseLotteryDialog = () => {
+    setLotteryDialogOpen(false);
+    resetLottery();
+  };
 
   return (
     <>
@@ -49,9 +65,12 @@ function App() {
         <AddIcon sx={{ mr: 1 }} />
         Add Lottery
       </Fab>
-      <LotteryDialog
+      <AddLotteryDialog
         open={lotteryDialogOpen}
-        onClose={() => setLotteryDialogOpen(false)}
+        onClose={CloseLotteryDialog}
+        createNewLottery={createNewLottery}
+        isAdding={isAdding}
+        error={errorMessage}
       />
     </>
   );
