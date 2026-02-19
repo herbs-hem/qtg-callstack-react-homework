@@ -137,3 +137,54 @@ The web project template includes starting code that we don’t want - you can r
 </details>
 
 > 💡 You are now here → https://github.com/callstack-workshops/questrade-react-homework/tree/part-2
+
+## Part 2: Add a lottery
+
+Given the UI design implement Add a lottery feature.
+
+<details>
+  <summary><b>Add lottery FAB button</b></summary><br>
+
+![267631611-6044cdf1-07b9-421b-a6b0-98dc005f2324.png](assets/267631611-6044cdf1-07b9-421b-a6b0-98dc005f2324.png)
+</details>
+
+<details>
+  <summary><b>Add lottery modal</b></summary><br>
+
+![267631757-e56f250d-251d-43eb-94e5-ee06fece7ece.png](assets/267631757-e56f250d-251d-43eb-94e5-ee06fece7ece.png)
+</details>
+
+<details>
+  <summary><b>Add lottery modal form validation</b></summary><br>
+
+![267631887-783f4ca1-9c3c-411c-8cc7-86736152f283.png](assets/267631887-783f4ca1-9c3c-411c-8cc7-86736152f283.png)
+</details>
+
+<details>
+  <summary><b>Add lottery loading state</b></summary><br>
+
+![267632061-cb7ec061-c586-4466-b8ff-f3eccc5519d1.png](assets/267632061-cb7ec061-c586-4466-b8ff-f3eccc5519d1.png)
+</details>
+
+<details>
+  <summary><b>Notification after successful action</b></summary><br>
+
+![267632188-bf80c280-46a6-4aff-ac45-98aa3a4dfdd8.png](assets/267632188-bf80c280-46a6-4aff-ac45-98aa3a4dfdd8.png)
+</details>
+
+Add lottery feature should have following things implemented:
+
+- FAB button to open a modal
+- Modal with a form to add a new lottery
+- Forms should be validated
+- Loading state should be present when form is submitted
+- After successful form submission modal should close automatically and Notification with a message should open
+
+Helpful resources:
+
+- https://formik.org/ and https://github.com/jquense/yup can be used to implement form validation
+- Modal component - https://mui.com/material-ui/react-modal/
+- Notification component - https://mui.com/material-ui/react-snackbar/
+- LoadingButton component from MaterialUI is a part of a complimentary library -https://www.npmjs.com/package/@mui/lab
+
+> 💡 You are now here → https://github.com/callstack-workshops/questrade-react-homework/tree/part-3
