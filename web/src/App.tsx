@@ -2,13 +2,16 @@ import { IconButton, Box, Typography, Fab } from '@mui/material';
 import Brightness4 from '@mui/icons-material/Brightness4';
 import Brightness7 from '@mui/icons-material/Brightness7';
 import AddIcon from '@mui/icons-material/Add';
-import { useThemeMode } from './ThemeModeContext';
+import { useThemeMode } from './providers/ThemeModeContext';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import { useState } from 'react';
+import LotteryDialog from './components/LotteryDialog';
 
 function App() {
   const { mode, toggleColorMode } = useThemeMode();
+  const [lotteryDialogOpen, setLotteryDialogOpen] = useState(false);
 
   return (
     <>
@@ -34,6 +37,7 @@ function App() {
         variant="extended"
         color="primary"
         aria-label="add lottery"
+        onClick={() => setLotteryDialogOpen(true)}
         sx={{
           position: 'fixed',
           textAlign: 'center',
@@ -45,6 +49,10 @@ function App() {
         <AddIcon sx={{ mr: 1 }} />
         Add Lottery
       </Fab>
+      <LotteryDialog
+        open={lotteryDialogOpen}
+        onClose={() => setLotteryDialogOpen(false)}
+      />
     </>
   );
 }
