@@ -4,6 +4,7 @@ import {
   DialogContent,
   TextField,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -16,6 +17,7 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
   const [lotteryName, setLotteryName] = useState('');
   const [lotteryPrize, setLotteryPrize] = useState('');
   const [showValidationErrors, setShowValidationErrors] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   const nameInvalid =
     showValidationErrors &&
@@ -40,6 +42,16 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
         : 'Prize must be at least 4 characters';
   }
 
+  const handleResponseError = async (response: Response): Promise<never> => {
+    const errBody = await response.json().catch(() => ({}));
+    const message =
+      (errBody as { error?: string }).error ?? 'Failed to add lottery';
+
+    throw new Error(message, {
+      cause: { status: response.status, body: errBody },
+    });
+  };
+
   const handleClose = () => {
     setShowValidationErrors(false);
     setLotteryName('');
@@ -47,15 +59,49 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
     onClose();
   };
 
-  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleAdd = async () => {
     const nameValid = lotteryName.trim().length >= 4;
     const prizeValid = lotteryPrize.trim().length >= 4;
+
     if (!nameValid || !prizeValid) {
       setShowValidationErrors(true);
       return;
     }
-    handleClose();
+    setIsAdding(true);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/lotteries`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'simple',
+            name: lotteryName,
+            prize: lotteryPrize,
+          }),
+        },
+      );
+
+      // Simulate a delay to test the loading state
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (!response.ok) {
+        await handleResponseError(response);
+      }
+
+      const data = await response.json();
+      console.log(data);
+      handleClose();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('API error:', error.message, error.cause);
+      }
+      setShowValidationErrors(true);
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -88,10 +134,14 @@ export default function LotteryDialog({ open, onClose }: LotteryDialogProps) {
           variant="contained"
           color="primary"
           type="button"
-          onClick={handleAdd}
+          disabled={isAdding}
+          startIcon={
+            isAdding ? <CircularProgress size={20} color="inherit" /> : null
+          }
+          onClick={() => handleAdd()}
           sx={{ mt: 2 }}
         >
-          Add
+          {isAdding ? 'Adding...' : 'Add'}
         </Button>
       </DialogContent>
     </Dialog>
