@@ -1,0 +1,8 @@
+### Add a new lottery
+POST http://localhost:3000/lotteries
+Content-Type: application/json
+
+{
+  "name": "Test Lottery",
+  "prize": "Test Prize"
+}

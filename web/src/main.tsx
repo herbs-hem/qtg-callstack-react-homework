@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ThemeModeProvider } from './ThemeModeContext';
+import { ThemeModeProvider } from './providers/ThemeModeContext.tsx';
 import './index.css';
 import App from './App.tsx';
 import '@fontsource/roboto/300.css';
