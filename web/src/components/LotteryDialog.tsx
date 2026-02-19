@@ -8,6 +8,7 @@ import {
   Snackbar,
 } from '@mui/material';
 import { useState } from 'react';
+import * as LotteryService from '../services/lottery';
 
 type LotteryDialogProps = {
   open: boolean;
@@ -47,16 +48,6 @@ export default function LotteryDialog({
         : 'Prize must be at least 4 characters';
   }
 
-  const handleResponseError = async (response: Response): Promise<never> => {
-    const errBody = await response.json().catch(() => ({}));
-    const message =
-      (errBody as { error?: string }).error ?? 'Failed to add lottery';
-
-    throw new Error(message, {
-      cause: { status: response.status, body: errBody },
-    });
-  };
-
   const handleClose = () => {
     setShowValidationErrors(false);
     setLotteryName('');
@@ -74,36 +65,18 @@ export default function LotteryDialog({
     }
     setIsAdding(true);
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/lotteries`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'simple',
-            name: lotteryName,
-            prize: lotteryPrize,
-          }),
-        },
+      const lottery = await LotteryService.addLottery(
+        lotteryName,
+        lotteryPrize,
       );
 
       // Simulate a delay to test the loading state
       // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (!response.ok) {
-        await handleResponseError(response);
-      }
-
-      const data = await response.json();
-      console.log(data);
+      console.log(lottery);
       handleClose();
       setOpenNotification(true);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error('API error:', error.message, error.cause);
-      }
+    } catch {
       setShowValidationErrors(true);
     } finally {
       setIsAdding(false);
