@@ -1,20 +1,22 @@
-import { IconButton, Box, Typography, Fab } from '@mui/material';
+import { IconButton, Box, Fab } from '@mui/material';
 import Brightness4 from '@mui/icons-material/Brightness4';
 import Brightness7 from '@mui/icons-material/Brightness7';
 import AddIcon from '@mui/icons-material/Add';
 import { useThemeMode } from './providers/ThemeModeContext';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import AddLotteryDialog from './components/AddLotteryDialog';
 import { useLottery } from './hooks/useLottery';
+import Lotteries from './components/Lotteries';
+import { useLotteries } from './hooks/useLotteries';
 
 function App() {
   const { mode, toggleColorMode } = useThemeMode();
   const [lotteryDialogOpen, setLotteryDialogOpen] = useState(false);
   const { createNewLottery, isAdding, lottery, resetLottery, errorMessage } =
     useLottery();
+  const [selectedLotteries, setSelectedLotteries] = useState<string[]>([]);
+  const { lotteries, loading } = useLotteries();
 
   useEffect(() => {
     if (lottery) {
@@ -29,6 +31,15 @@ function App() {
     resetLottery();
   };
 
+  const handleSelectLottery = (id: string) => {
+    setSelectedLotteries((lotteries) => {
+      if (lotteries.includes(id)) {
+        return lotteries.filter((lottery) => lottery !== id);
+      }
+      return [...lotteries, id];
+    });
+  };
+
   return (
     <>
       <Box sx={{ position: 'fixed', top: 8, right: 8, zIndex: 1 }}>
@@ -40,15 +51,24 @@ function App() {
           {mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
         </IconButton>
       </Box>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <Typography variant="h1">Hello Lottery App</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <Lotteries
+          loading={loading}
+          hasLotteries={lotteries.length > 0}
+          lotteries={lotteries}
+          selectedLotteries={selectedLotteries}
+          onSelectLottery={handleSelectLottery}
+        />
+      </Box>
       <Fab
         variant="extended"
         color="primary"

@@ -41,3 +41,21 @@ export async function addLottery(
     throw error;
   }
 }
+
+export async function fetchLotteries(): Promise<Lottery[]> {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/lotteries`);
+
+    if (!response.ok) {
+      await handleResponseError(response);
+    }
+
+    const data = (await response.json()) as Lottery[];
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('API error:', error.message, error.cause);
+    }
+    throw error;
+  }
+}
