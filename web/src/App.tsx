@@ -69,22 +69,30 @@ function App() {
           onSelectLottery={handleSelectLottery}
         />
       </Box>
-      <Fab
-        variant="extended"
-        color="primary"
-        aria-label="add lottery"
-        onClick={() => setLotteryDialogOpen(true)}
+      <Box
         sx={{
           position: 'fixed',
-          textAlign: 'center',
           right: (theme) => theme.spacing(2),
           bottom: (theme) => theme.spacing(2),
           zIndex: 1,
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
         }}
       >
-        <AddIcon sx={{ mr: 1 }} />
-        Add Lottery
-      </Fab>
+        <Fab variant="extended" aria-label="register">
+          Register
+        </Fab>
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add lottery"
+          onClick={() => setLotteryDialogOpen(true)}
+        >
+          <AddIcon sx={{ mr: 1 }} />
+          Add Lottery
+        </Fab>
+      </Box>
       <AddLotteryDialog
         open={lotteryDialogOpen}
         onClose={CloseLotteryDialog}
