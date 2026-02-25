@@ -59,3 +59,26 @@ export async function fetchLotteries(): Promise<Lottery[]> {
     throw error;
   }
 }
+
+export async function registerLottery(
+  name: string,
+  lotteryId: string,
+): Promise<void> {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, lotteryId }),
+    });
+    if (!response.ok) {
+      await handleResponseError(response);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('API error:', error.message, error.cause);
+    }
+    throw error;
+  }
+}

@@ -9,6 +9,8 @@ import AddLotteryDialog from './components/AddLotteryDialog';
 import { useLottery } from './hooks/useLottery';
 import Lotteries from './components/Lotteries';
 import { useLotteries } from './hooks/useLotteries';
+import RegisterLotteryDialog from './components/RegisterLotteryDialog';
+import { useRegisterLottery } from './hooks/useRegisterLottery';
 
 function App() {
   const { mode, toggleColorMode } = useThemeMode();
@@ -16,7 +18,15 @@ function App() {
   const { createNewLottery, isAdding, lottery, resetLottery, errorMessage } =
     useLottery();
   const [selectedLotteries, setSelectedLotteries] = useState<string[]>([]);
-  const { lotteries, loading } = useLotteries();
+  const { lotteries, loading, refetch: refetchLotteries } = useLotteries();
+  const [registerLotteryDialogOpen, setRegisterLotteryDialogOpen] =
+    useState(false);
+  const {
+    registerLottery,
+    isRegistering,
+    registerErrorMessage,
+    resetRegisterLottery,
+  } = useRegisterLottery();
 
   useEffect(() => {
     if (lottery) {
@@ -26,9 +36,14 @@ function App() {
     }
   }, [lottery]);
 
-  const CloseLotteryDialog = () => {
+  const closeLotteryDialog = () => {
     setLotteryDialogOpen(false);
     resetLottery();
+  };
+
+  const closeRegisterLotteryDialog = () => {
+    setRegisterLotteryDialogOpen(false);
+    resetRegisterLottery();
   };
 
   const handleSelectLottery = (id: string) => {
@@ -38,6 +53,15 @@ function App() {
       }
       return [...lotteries, id];
     });
+  };
+
+  const handleRegisterLottery = () => {
+    setRegisterLotteryDialogOpen(true);
+  };
+
+  const createNewLotteryAndRefetch = async (name: string, prize: string) => {
+    await createNewLottery(name, prize);
+    await refetchLotteries();
   };
 
   return (
@@ -80,7 +104,12 @@ function App() {
           gap: 2,
         }}
       >
-        <Fab variant="extended" aria-label="register">
+        <Fab
+          variant="extended"
+          aria-label="register"
+          onClick={handleRegisterLottery}
+          disabled={selectedLotteries.length === 0}
+        >
           Register
         </Fab>
         <Fab
@@ -95,10 +124,18 @@ function App() {
       </Box>
       <AddLotteryDialog
         open={lotteryDialogOpen}
-        onClose={CloseLotteryDialog}
-        createNewLottery={createNewLottery}
+        onClose={closeLotteryDialog}
+        createNewLottery={createNewLotteryAndRefetch}
         isAdding={isAdding}
         error={errorMessage}
+      />
+      <RegisterLotteryDialog
+        open={registerLotteryDialogOpen}
+        onClose={closeRegisterLotteryDialog}
+        registerLottery={registerLottery}
+        isRegistering={isRegistering}
+        error={registerErrorMessage}
+        selectedLotteries={selectedLotteries}
       />
     </>
   );
