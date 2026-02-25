@@ -26,5 +26,5 @@ export function useLotteries() {
     fetchLotteries();
   }, []);
 
-  return { lotteries, loading, error };
+  return { lotteries, loading, error, refetch: fetchLotteries };
 }
