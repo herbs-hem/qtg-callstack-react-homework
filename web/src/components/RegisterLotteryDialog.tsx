@@ -1,46 +1,42 @@
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
   Button,
   CircularProgress,
-  Snackbar,
+  Dialog,
   DialogActions,
+  DialogContent,
+  DialogTitle,
+  Snackbar,
+  TextField,
   Typography,
 } from '@mui/material';
+import { useFormik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
-import { useFormik } from 'formik';
 
-type LotteryDialogProps = {
+type RegisterLotteryDialogProps = {
   open: boolean;
   onClose: () => void;
-  createNewLottery: (
-    lotteryName: string,
-    lotteryPrize: string,
-  ) => Promise<void>;
-  isAdding: boolean;
+  registerLottery: (name: string, lotteries: string[]) => Promise<void>;
+  isRegistering: boolean;
   error: string | null;
+  selectedLotteries: string[];
 };
 
-const lotterySchema = Yup.object().shape({
+const registerLotterySchema = Yup.object().shape({
   name: Yup.string()
     .required('Name is required')
     .min(4, 'Name must be at least 4 characters'),
-  prize: Yup.string()
-    .required('Prize is required')
-    .min(4, 'Prize must be at least 4 characters'),
 });
 
-export default function AddLotteryDialog({
+export default function RegisterLotteryDialog({
   open,
   onClose,
-  createNewLottery,
-  isAdding,
+  registerLottery,
+  isRegistering,
   error,
-}: Readonly<LotteryDialogProps>) {
-  const [openAddLotteryNotification, setOpenAddLotteryNotification] =
+  selectedLotteries,
+}: RegisterLotteryDialogProps) {
+  const [openRegisterLotteryNotification, setOpenRegisterLotteryNotification] =
     useState(false);
 
   const handleClose = () => {
@@ -51,14 +47,13 @@ export default function AddLotteryDialog({
   const formik = useFormik({
     initialValues: {
       name: '',
-      prize: '',
     },
-    validationSchema: lotterySchema,
+    validationSchema: registerLotterySchema,
     validateOnChange: true,
     onSubmit: (values) => {
-      createNewLottery(values.name, values.prize)
+      registerLottery(values.name, selectedLotteries)
         .then(() => {
-          setOpenAddLotteryNotification(true);
+          setOpenRegisterLotteryNotification(true);
           handleClose();
         })
         .catch(() => {});
@@ -68,7 +63,7 @@ export default function AddLotteryDialog({
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Add a new lottery</DialogTitle>
+        <DialogTitle>Register for a lottery</DialogTitle>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
             <TextField
@@ -83,19 +78,6 @@ export default function AddLotteryDialog({
               error={Boolean(formik.errors.name && formik.touched.name)}
               helperText={formik.touched.name && formik.errors.name}
             />
-            <TextField
-              variant="standard"
-              label="Lottery Prize"
-              fullWidth
-              required
-              name="prize"
-              value={formik.values.prize}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={Boolean(formik.errors.prize && formik.touched.prize)}
-              helperText={formik.touched.prize && formik.errors.prize}
-              sx={{ mt: 2 }}
-            />
           </DialogContent>
           <DialogActions
             sx={{ justifyContent: 'flex-start', gap: 2, px: 3, pb: 2 }}
@@ -104,21 +86,23 @@ export default function AddLotteryDialog({
               variant="contained"
               color="primary"
               type="submit"
-              aria-disabled={!formik.isValid || isAdding}
+              aria-disabled={!formik.isValid || isRegistering}
               startIcon={
-                isAdding ? <CircularProgress size={20} color="inherit" /> : null
+                isRegistering ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : null
               }
             >
-              {isAdding ? 'Adding...' : 'Add'}
+              {isRegistering ? 'Registering...' : 'Register'}
             </Button>
             {error && <Typography color="error">{error}</Typography>}
           </DialogActions>
         </form>
       </Dialog>
       <Snackbar
-        open={openAddLotteryNotification}
-        onClose={() => setOpenAddLotteryNotification(false)}
-        message="New Lottery added successfully"
+        open={openRegisterLotteryNotification}
+        onClose={() => setOpenRegisterLotteryNotification(false)}
+        message="Lottery registered successfully"
         autoHideDuration={3000}
       />
     </>
