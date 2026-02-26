@@ -188,3 +188,46 @@ Helpful resources:
 - LoadingButton component from MaterialUI is a part of a complimentary library -https://www.npmjs.com/package/@mui/lab
 
 > 💡 You are now here → https://github.com/callstack-workshops/questrade-react-homework/tree/part-3
+
+## Part 3: List lotteries
+
+Given the UI design implement List lotteries feature.
+
+<details>
+  <summary><b>Fetch and display lottery data</b></summary><br>
+
+![267632320-3c1eac8e-072a-44e9-8f65-f2a41588fe8e.png](assets/267632320-3c1eac8e-072a-44e9-8f65-f2a41588fe8e.png)
+![267632361-e306725f-128d-4219-9426-6e09c04c093e.png](assets/267632361-e306725f-128d-4219-9426-6e09c04c093e.png)
+![267632406-a700006a-ab52-4ba8-9021-d01e68ca8270.png](assets/267632406-a700006a-ab52-4ba8-9021-d01e68ca8270.png)
+</details>
+
+<details>
+  <summary><b>Make lotteries selectable and add register FAB button</b></summary><br>
+
+![267632563-ac5fd39a-14be-4b09-8077-136ea66f8ebf.png](assets/267632563-ac5fd39a-14be-4b09-8077-136ea66f8ebf.png)
+</details>
+
+<details>
+  <summary><b>Add Register modal with name input and validation</b></summary><br>
+
+![267632627-50988024-0da9-46cf-af93-3b5dc5ebe090.png](assets/267632627-50988024-0da9-46cf-af93-3b5dc5ebe090.png)
+</details>
+
+<details>
+  <summary><b>Register to selected lotteries and notification message</b></summary><br>
+
+![267632706-95b60ead-576e-49cb-8510-b0df33b226dc.png](assets/267632706-95b60ead-576e-49cb-8510-b0df33b226dc.png)
+
+</details>
+
+List lotteries feature:
+
+- Should display list of lotteries
+- Adding a new lottery should re-fetch the lotteries
+- Lotteries should be selectable by clicking on them
+- Finished lotteries should be grayed-out and not be selectable as we are not able to register for them
+- Register FAB button should open a modal to register for selected lotteries
+- Register FAB button should be disabled when no lotteries are selected
+- Register modal should close after successful submission and notification with a message should be shown
+
+> 💡 You are now here → https://github.com/callstack-workshops/questrade-react-homework/tree/part-4
